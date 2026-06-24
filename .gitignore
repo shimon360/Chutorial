@@ -74,3 +74,13 @@ crashlytics-build.properties
 /[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# --- 9. OSが自動生成する不要ファイル ---
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+
+# --- 10. Unityの一時データ・他エディタ設定---
+.utmp/
+.vscode/
