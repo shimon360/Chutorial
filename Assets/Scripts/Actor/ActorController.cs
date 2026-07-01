@@ -39,8 +39,18 @@ public class ActorController : MonoBehaviour
 	[Tooltip("食べ残し1個あたりの速度低下率 (0.1 = 10%低下)")]
 	public float speedPenaltyRate = 0.1f;
 
-	[Tooltip("どれだけ食べ残しを拾っても保証される最低速度の割合 (0.3 = ベース速度の30%は維持)")]
+	[Tooltip("どれだけ食べ残しを拾っても保証される最低速度の割合 (0.3 = ベース速度 of 30%は維持)")]
 	public float minSpeedRatio = 0.3f;
+
+	[Header("必殺技・猫じゃらし設定")]
+	[Tooltip("猫じゃらしの残り使用回数")]
+	public int catTeaserCount = 1;
+
+	[Tooltip("猫じゃらしの無敵効果時間（秒）")]
+	public float catTeaserDuration = 5.0f;
+
+	[HideInInspector]
+	public bool isCatTeaserActive = false; // 現在発動中かどうかのフラグ
 
 	[Header("ジャンプ減衰設定")]
 	[Tooltip("ベースのジャンプ力")]
@@ -89,6 +99,12 @@ public class ActorController : MonoBehaviour
 		// ジャンプ入力処理
 		JumpUpdate ();
 
+		// 必殺技「猫じゃらし」の入力検知 (Eキー)
+		if (Keyboard.current.eKey.wasPressedThisFrame && catTeaserCount > 0 && !isCatTeaserActive)
+		{
+			StartCoroutine(ActivateCatTeaser());
+		}
+
 		cameraController.SetPosition (transform.position);
 	}
 	
@@ -102,7 +118,7 @@ public class ActorController : MonoBehaviour
 		float currentSpeed = baseSpeed * Mathf.Max(minSpeedRatio, speedPenalty);
 
 		// X方向移動入力
-		if (Keyboard.current.rightArrowKey.isPressed)
+		if (Keyboard.current.dKey.isPressed)
 		{// 右方向の移動入力
 			// X方向移動速度をプラスに設定
 			xSpeed = currentSpeed;
@@ -113,7 +129,7 @@ public class ActorController : MonoBehaviour
 			// スプライトを通常の向きで表示
 			spriteRenderer.flipX = false;
 		}
-		else if (Keyboard.current.leftArrowKey.isPressed)
+		else if (Keyboard.current.aKey.isPressed)
 		{// 左方向の移動入力
 			// X方向移動速度をマイナスに設定
 			xSpeed = -currentSpeed;
@@ -136,8 +152,8 @@ public class ActorController : MonoBehaviour
 	/// </summary>
 	private void JumpUpdate ()
 	{
-		// 接地している時に上キーが「押された瞬間」のみジャンプ
-		if (groundSensor != null && groundSensor.isGrounded && Keyboard.current.upArrowKey.wasPressedThisFrame)
+		// 接地している時にWキーが「押された瞬間」のみジャンプ
+		if (groundSensor != null && groundSensor.isGrounded && Keyboard.current.wKey.wasPressedThisFrame)
 		{// ジャンプ開始
 			// 食べ残しのペナルティを加味した現在のジャンプ力を計算
 			float jumpPenalty = 1f - (leftoverCount * speedPenaltyRate);
@@ -147,8 +163,8 @@ public class ActorController : MonoBehaviour
 			rigidbody2D.linearVelocity = new Vector2 (rigidbody2D.linearVelocity.x, currentJumpPower);
 		}
 
-		// 上キーを「離した瞬間」にまだ上昇中なら、上方向の速度を減らしてジャンプの高さを調整する
-		if (Keyboard.current.upArrowKey.wasReleasedThisFrame)
+		// Wキーを「離した瞬間」にまだ上昇中なら、上方向の速度を減らしてジャンプの高さを調整する
+		if (Keyboard.current.wKey.wasReleasedThisFrame)
 		{
 			if (rigidbody2D.linearVelocity.y > 0.0f)
 			{
@@ -253,5 +269,21 @@ public class ActorController : MonoBehaviour
 		float currentSpeed = baseSpeed * Mathf.Max(minSpeedRatio, 1f - (leftoverCount * speedPenaltyRate));
 		float currentJump = baseJumpPower * Mathf.Max(minJumpPowerRatio, 1f - (leftoverCount * speedPenaltyRate));
 		Debug.Log($"【食べ残し回収】 スコア +{scoreValue} (現在スコア: {score}) | 食べ残し数: {leftoverCount} | 現在速度: {currentSpeed} | 現在ジャンプ力: {currentJump}");
+	}
+
+	/// <summary>
+	/// 必殺技「猫じゃらし」を発動するコルーチン
+	/// </summary>
+	private IEnumerator ActivateCatTeaser()
+	{
+		catTeaserCount = Mathf.Max(0, catTeaserCount - 1);
+		isCatTeaserActive = true;
+		
+		Debug.Log($"【必殺技】猫じゃらし発動！ {catTeaserDuration}秒間無敵状態になります。");
+
+		yield return new WaitForSecondsRealtime(catTeaserDuration);
+
+		isCatTeaserActive = false;
+		Debug.Log("【必殺技】猫じゃらしの効果が終了しました。");
 	}
 }
