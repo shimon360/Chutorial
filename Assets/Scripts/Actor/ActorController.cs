@@ -144,6 +144,10 @@ public class ActorController : MonoBehaviour
 	/// </summary>
 	public void Damaged()
 	{
+		Debug.Log("Damaged呼ばれた: " + gameObject.name);
+		Debug.Log("SpriteRenderer activeSelf: " + gameObject.activeSelf);
+		Debug.Log("enabled: " + enabled);
+		
 		if (isDead) return; // 既に死んでいる場合は以降の処理を重複して行わない
 		isDead = true;
 
