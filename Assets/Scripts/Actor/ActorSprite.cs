@@ -115,7 +115,7 @@ public class ActorSprite : MonoBehaviour
             // スプライトの表示・非表示を反転させてチカチカさせる
             spriteRenderer.enabled = !spriteRenderer.enabled;
             
-            yield return new WaitForSeconds(interval);
+            yield return new WaitForSecondsRealtime(interval);
             timePassed += interval;
         }
 

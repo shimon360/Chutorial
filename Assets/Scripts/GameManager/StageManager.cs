@@ -16,20 +16,40 @@ public class StageManager : MonoBehaviour
 	// ステージ内の全エリアの配列(Startで取得)
 	private AreaManager[] inStageAreas;
 
+	[Header ("クリアデータ保存用（静的変数）")]
+	public static int finalScore = 0;
+	public static float finalClearTime = 0f;
+
+	[Header ("プレイ時間計測")]
+	public float playTime = 0f;
+
 	// Start
 	void Start()
 	{
+		// 静的変数を初期化（リトライ時のリセット用）
+		finalScore = 0;
+		finalClearTime = 0f;
+		playTime = 0f;
 		// 参照取得
 		actorController = GetComponentInChildren<ActorController> ();
 		cameraController = GetComponentInChildren<CameraController> ();
 
 		// ステージ内の全エリアを取得・初期化
-		inStageAreas = GetComponentsInChildren<AreaManager> ();
+		inStageAreas = GetComponentsInChildren<AreaManager> (true);
 		foreach (var targetAreaManager in inStageAreas)
 			targetAreaManager.Init (this);
 
 		// 初期エリアをアクティブ化(その他のエリアは全て無効化)
 		initArea.ActiveArea ();
+	}
+
+	void Update()
+	{
+		// エリア遷移中でない、かつアクターが有効な間は時間を進める
+		if (!isChangingArea && actorController != null && actorController.enabled)
+		{
+			playTime += Time.deltaTime;
+		}
 	}
 
 	/// <summary>
@@ -42,6 +62,7 @@ public class StageManager : MonoBehaviour
 	}
 
 	private bool isChangingArea = false; // エリア遷移中かどうかを判定するフラグ
+	public bool IsChangingArea => isChangingArea;
 
 	/// <summary>
 	/// エリアの切り替え（スクロール遷移）を開始する
