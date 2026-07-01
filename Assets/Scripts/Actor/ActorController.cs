@@ -209,8 +209,8 @@ public class ActorController : MonoBehaviour
 		enabled = false;
 		rigidbody2D.linearVelocity = Vector2.zero;
 
-		// TODO: ここにエンディング画面（シーン）への遷移処理を追加する
-		// 例： UnityEngine.SceneManagement.SceneManager.LoadScene("EndingScene");
+		// 死亡演出のあとにゲームオーバーシーンへ遷移するコルーチンを開始
+		StartCoroutine(GameOverSequence());
 	}
 
 	/// <summary>
@@ -285,5 +285,20 @@ public class ActorController : MonoBehaviour
 
 		isCatTeaserActive = false;
 		Debug.Log("【必殺技】猫じゃらしの効果が終了しました。");
+	}
+
+	/// <summary>
+	/// 死亡時にゲームオーバーシーンへ遷移するコルーチン
+	/// </summary>
+	private IEnumerator GameOverSequence()
+	{
+		// 死亡時のやられ演出（点滅など）を画面に見せるため、リアルタイムで1.5秒間待機
+		yield return new WaitForSecondsRealtime(1.5f);
+
+		// ゲームオーバーシーンへ遷移する前にタイムスケールを1に戻しておく（次のプレイでのフリーズ防止）
+		Time.timeScale = 1.0f;
+
+		// ゲームオーバーシーンをロード
+		UnityEngine.SceneManagement.SceneManager.LoadScene("GameOverScene");
 	}
 }
