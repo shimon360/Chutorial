@@ -18,9 +18,11 @@ public class ActorGroundSensor : MonoBehaviour
     // -------------------------------------------------------------
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // 接触したオブジェクトのタグが地面(Ground)かチェック
+        Debug.Log("接触：" + collision.name);
+
         if (collision.CompareTag(groundTag))
         {
+            Debug.Log("Groundタグを検出");
             isGrounded = true;
         }
     }

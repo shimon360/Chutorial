@@ -13,7 +13,7 @@ TagManager:
   - Water
   - UI
   - Layer_Shadow
-  - 
+  - Ground
   - 
   - 
   - 
@@ -41,6 +41,21 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 334182315
+    locked: 0
+  - name: Enemy
+    uniqueID: 2254274201
+    locked: 0
+  - name: Ground
+    uniqueID: 2713220885
+    locked: 0
+  - name: Object
+    uniqueID: 524685863
+    locked: 0
+  - name: Player
+    uniqueID: 2870044185
     locked: 0
   m_RenderingLayers:
   - Default

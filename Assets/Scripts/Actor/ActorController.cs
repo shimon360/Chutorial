@@ -114,6 +114,7 @@ public class ActorController : MonoBehaviour
 			// ジャンプ力を計算
 			float jumpPower = 10.0f;
 			// ジャンプ力を適用
+			Debug.Log("ジャンプ");
 			rigidbody2D.linearVelocity = new Vector2 (rigidbody2D.linearVelocity.x, jumpPower);
 		}
 

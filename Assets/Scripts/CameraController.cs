@@ -2,14 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class ParallaxLayer
+{
+    [Tooltip("動かすオブジェクト")]
+    public Transform target;
+
+    [Tooltip("視差係数（0～1）")]
+    [Range(0f, 1f)]
+    public float factor = 1.0f;
+}
+
 /// <summary>
 /// メインカメラ制御クラス(Main Cameraにアタッチ)
 /// </summary>
 public class CameraController : MonoBehaviour
 {
-	// オブジェクト・コンポーネント
-	[Tooltip("動かしたい背景オブジェクト")]
-	public Transform background;
+	[Header("パララックス設定")]
+	public List<ParallaxLayer> parallaxLayers = new List<ParallaxLayer>();
+
+	[Header("Objectループ設定")]
+	public float objectLoopWidth = 20f; // 画面横幅（要調整）
+	public float objectResetOffset = 20f;
 
 	// 各種変数
 	private Vector2 basePos; // 基点座標（通常時のアクター座標）
@@ -17,9 +31,6 @@ public class CameraController : MonoBehaviour
 	
 	[HideInInspector] public bool isScrolling = false; // エリア間スクロール中かどうか
 	private Vector2 scrollTargetPos; // スクロール時の目標座標
-	
-	[Tooltip("背景のスクロール量（0.5ならカメラの半分の速度で移動）")]
-	public float parallaxFactor = 0.5f;
 
 	private void Start ()
 	{
@@ -56,6 +67,8 @@ public class CameraController : MonoBehaviour
 	// FixedUpdate
 	private void FixedUpdate ()
 	{
+		Debug.Log("FixedUpdate動いている");
+
 		// カメラの目標座標を決定する
 		Vector3 pos = transform.localPosition;
 
@@ -78,16 +91,37 @@ public class CameraController : MonoBehaviour
 		transform.localPosition = Vector3.Lerp (transform.localPosition, pos, 0.08f);
 
 		// --- パララックス（視差）スクロール処理 ---
-		if (background != null)
+		Vector3 deltaCameraPos = transform.position - previousCameraPos;
+		Debug.Log(deltaCameraPos);
+
+		foreach (var layer in parallaxLayers)
 		{
-			// 今回のフレームでのカメラ移動量を計算
-			Vector3 deltaCameraPos = transform.position - previousCameraPos;
-			
-			// 背景をカメラの移動量 × パララックス係数 の分だけ動かす
-			background.position += new Vector3 (deltaCameraPos.x * parallaxFactor, deltaCameraPos.y * parallaxFactor, 0);
+			if (layer.target == null) continue;
+
+			layer.target.position += new Vector3(
+				deltaCameraPos.x * layer.factor,
+        		0,
+        		0
+    		);
+
+			if (layer.target.name.Contains("object"))
+			{
+				LoopObject(layer.target);
+			}
 		}
 
 		// 次のフレームの計算用に現在のカメラ座標を保存
 		previousCameraPos = transform.position;
+
+	}
+
+	private void LoopObject(Transform obj)
+	{
+	    float cameraX = transform.position.x;
+
+	    if (obj.position.x < cameraX - objectResetOffset)
+    	{
+        	obj.position += new Vector3(objectLoopWidth * 2f, 0, 0);
+    	}
 	}
 }
