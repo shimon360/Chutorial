@@ -85,6 +85,10 @@ public class StageManager : MonoBehaviour
 			actorController.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
 		}
 
+		// 3. エリアのアクティブ状態を切り替え
+		nextArea.ActiveArea();
+		initArea = nextArea; // 現在のエリアを更新
+
 		// 2. カメラのスクロールを開始
 		if (cameraController != null)
 		{
@@ -106,9 +110,7 @@ public class StageManager : MonoBehaviour
 			cameraController.EndScroll();
 		}
 
-		// 3. エリアのアクティブ状態を切り替え
-		nextArea.ActiveArea();
-		initArea = nextArea; // 現在のエリアを更新
+
 
 		// 4. トリガーからプレイヤーを少し押し出して連続接触を防ぐ
 		if (actorController != null)

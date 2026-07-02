@@ -26,7 +26,7 @@ public class CatController : MonoBehaviour
     
     [Tooltip("追従の強さ（1: カメラと完全に同期して画面に固定、0.8: パララックス効果で少し遅れて動き奥行きが出る）")]
     [Range(0f, 1f)]
-    public float followRate = 0.9f;
+    public float followRate = 0.5f;
 
     [Tooltip("滑らかに追従（補間）させるかどうか")]
     public bool smoothFollow = true;
