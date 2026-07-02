@@ -7,8 +7,24 @@ using UnityEngine;
 /// </summary>
 public class AreaManager : MonoBehaviour
 {
-    [Tooltip("このエリアのカメラ基準座標")]
-    public Vector2 cameraBasePos;
+    [Tooltip("このエリアのカメラ位置を示すアンカーオブジェクト（アタッチしたオブジェクトの座標を参照します）")]
+    public Transform cameraMoveArea;
+
+    /// <summary>
+    /// カメラの基準座標（アタッチされた cameraMoveArea の座標を返します）
+    /// </summary>
+    public Vector2 cameraBasePos
+    {
+        get
+        {
+            if (cameraMoveArea != null)
+            {
+                return new Vector2(cameraMoveArea.position.x, cameraMoveArea.position.y);
+            }
+            // 未設定の場合は自分自身（AreaManagerオブジェクト）の現在地を返す（エラー防止のフォールバック）
+            return new Vector2(transform.position.x, transform.position.y);
+        }
+    }
 
     private StageManager stageManager; // 親となるStageManagerの参照
 
