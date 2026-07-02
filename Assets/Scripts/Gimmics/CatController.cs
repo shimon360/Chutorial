@@ -19,23 +19,6 @@ public class CatController : MonoBehaviour
     public ActorController actorController;
 
     private SpriteRenderer spriteRenderer;
-
-    [Header("追従設定")]
-    [Tooltip("追従対象のトランスフォーム（未設定の場合は自動でメインカメラを対象にします）")]
-    public Transform target;
-    
-    [Tooltip("追従の強さ（1: カメラと完全に同期して画面に固定、0.8: パララックス効果で少し遅れて動き奥行きが出る）")]
-    [Range(0f, 1f)]
-    public float followRate = 0.5f;
-
-    [Tooltip("滑らかに追従（補間）させるかどうか")]
-    public bool smoothFollow = true;
-
-    [Tooltip("追随する滑らかさ（値が大きいほど素早く追従）")]
-    public float smoothSpeed = 5.0f;
-
-    private float initialSelfX;
-    private float initialTargetX;
     private StageManager stageManager;
     private Coroutine catRoutine;
 
@@ -52,19 +35,6 @@ public class CatController : MonoBehaviour
 
     private void OnEnable()
     {
-        // 追従対象が未設定の場合はメインカメラをターゲットにする
-        if (target == null && Camera.main != null)
-        {
-            target = Camera.main.transform;
-        }
-
-        // アクティブ化された時点の座標を初期位置として記憶する
-        initialSelfX = transform.position.x;
-        if (target != null)
-        {
-            initialTargetX = target.position.x;
-        }
-
         // コルーチンを開始
         if (catRoutine != null)
         {
@@ -81,40 +51,6 @@ public class CatController : MonoBehaviour
             StopCoroutine(catRoutine);
             catRoutine = null;
         }
-    }
-
-    private void LateUpdate()
-    {
-        if (target == null) return;
-
-        // エリア遷移中の場合は追従を停止し、その場に留まらせてスクロールアウトさせる
-        if (stageManager != null && stageManager.IsChangingArea)
-        {
-            Debug.Log($"【猫ログ】 {gameObject.name} 追従停止（エリア遷移中を検知）");
-            return;
-        }
-
-        if (stageManager == null)
-        {
-            Debug.LogWarning($"【猫警告】 {gameObject.name} StageManager が見つからないため遷移を検知できません！");
-        }
-
-        // ターゲットの初期位置からの移動量（Delta）を計算
-        float targetDeltaX = target.position.x - initialTargetX;
-
-        // 移動量に追従率（followRate）を乗算し、初期の自身のX座標に足すことで目標X座標を決定
-        float targetX = initialSelfX + (targetDeltaX * followRate);
-
-        Vector3 newPos = transform.position;
-        if (smoothFollow)
-        {
-            newPos.x = Mathf.Lerp(transform.position.x, targetX, Time.deltaTime * smoothSpeed);
-        }
-        else
-        {
-            newPos.x = targetX;
-        }
-        transform.position = newPos;
     }
 
     private IEnumerator CatRoutine()

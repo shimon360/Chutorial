@@ -27,11 +27,10 @@
   * エリア間スクロールを引き起こす境界トリガー。インスペクターで次のエリア（`Next Area`）をアタッチして使用します。
 
 ### 3. ギミック・アイテム
-* **[CatController.cs](Assets/Scripts/Cat/CatController.cs)**
+* **[CatController.cs](Assets/Scripts/Gimmics/CatController.cs)**
   * 猫の監視（だるまさんが転んだ）ギミック。
-  * プレイヤー（カメラ）への自動追従（パララックス比率・滑らかな補間移動）をサポート。
-  * エリア遷移中は自動で追従を一時停止し、古い猫が画面外へスクロールアウトする演出を行います。
-  * `OnEnable`/`OnDisable` で正しく初期化・コルーチンの開始停止を行い、エリアごとの配置に対応します。
+  * エリアごとに配置され、その場でプレイヤーの監視を行います。
+  * `OnEnable`/`OnDisable` でコルーチンの開始停止を行い、エリア有効化タイミングでの適切な初期化に対応します。
 * **[Cheese.cs](Assets/Scripts/Cheese/Cheese.cs)**
   * キーアイテムのチーズ。接触すると消滅し、`isCollected` を有効にします。インスペクターの誤操作を防ぐためフラグは非表示です。
 * **[Leftover.cs](Assets/Scripts/Item/Leftover.cs)**
