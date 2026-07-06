@@ -1,10 +1,13 @@
 fileFormatVersion: 2
-guid: a694bb5bf464c4a49aee3ca7b79a65fc
+guid: 32a633c9210a747cc9dbe9982bfa0ed3
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5269499136761227205
-    second: mouse1_0
+      213: -2798507893268480548
+    second: dish_0
+  - first:
+      213: 4488708910888402097
+    second: dish_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +103,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: mouse1_0
+      name: dish_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 86
+        x: 54
+        y: 194
         width: 1178
-        height: 702
+        height: 453
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +118,30 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b389e11447afed6b0800000000000000
-      internalID: -5269499136761227205
+      spriteID: cddfa90f5e3b929d0800000000000000
+      internalID: -2798507893268480548
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dish_1
+      rect:
+        serializedVersion: 2
+        x: 1270
+        y: 386
+        width: 10
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1bc32a5e8f81b4e30800000000000000
+      internalID: 4488708910888402097
       vertices: []
       indices: 
       edges: []
@@ -135,7 +160,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      mouse1_0: -5269499136761227205
+      dish_0: -2798507893268480548
+      dish_1: 4488708910888402097
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
