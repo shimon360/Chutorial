@@ -25,9 +25,24 @@ public class CameraController : MonoBehaviour
 	public float objectLoopWidth = 20f; // 画面横幅（要調整）
 	public float objectResetOffset = 20f;
 
+    [Header("追従対象")]
+    [SerializeField]
+    private Transform player;
+	private ActorController actorController;
+
 	// 各種変数
-	private Vector2 basePos; // 基点座標（通常時のアクター座標）
 	private Vector3 previousCameraPos; // 前フレームのカメラ座標
+
+	private float fixedY;
+
+	[Header("カメラ範囲")]
+	[SerializeField]
+	private Transform leftLimit;
+	[SerializeField]
+	private Transform rightLimit;
+
+	[SerializeField]
+	private float cameraOffset = 2.5f; // Playerを画面の左側に表示する量
 	
 	[HideInInspector] public bool isScrolling = false; // エリア間スクロール中かどうか
 	private Vector2 scrollTargetPos; // スクロール時の目標座標
@@ -36,15 +51,12 @@ public class CameraController : MonoBehaviour
 	{
 		// 最初のカメラ位置を記憶しておく
 		previousCameraPos = transform.position;
-	}
 
-	/// <summary>
-	/// カメラの位置を動かす
-	/// </summary>
-	/// <param name="targetPos">座標</param>
-	public void SetPosition (Vector2 targetPos)
-	{
-		basePos = targetPos;
+		if (player != null)
+		{
+			fixedY = transform.position.y;
+			actorController = player.GetComponent<ActorController>();
+		}
 	}
 
 	/// <summary>
@@ -75,8 +87,19 @@ public class CameraController : MonoBehaviour
 		if (!isScrolling)
 		{
 			// 通常時：アクターの現在位置より少し右上を映すようにX・Y座標を補正
-			pos.x = basePos.x + 2.5f; // X座標
-			pos.y = basePos.y + 1.5f; // Y座標
+			float offset = cameraOffset;
+
+			if (actorController != null && !actorController.rightFacing)
+			{
+				offset = -cameraOffset;
+			}
+
+			float targetX = player.position.x + offset;
+			float halfWidth = Camera.main.orthographicSize * Camera.main.aspect;
+			targetX = Mathf.Clamp(targetX, leftLimit.position.x + halfWidth, rightLimit.position.x - halfWidth);
+
+			pos.x = targetX; // X座標
+			pos.y = fixedY; // Y座標
 		}
 		else
 		{

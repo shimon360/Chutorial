@@ -13,7 +13,6 @@ public class ActorController : MonoBehaviour
 	private SpriteRenderer spriteRenderer;
 	private ActorGroundSensor groundSensor;
 	private ActorSprite actorSprite;
-	public CameraController cameraController; // カメラ制御クラス
 
 	// ステータス関連変数
 	private bool isDead = false; // 死亡済みかどうかのフラグ
@@ -44,8 +43,6 @@ public class ActorController : MonoBehaviour
 			actorSprite.Init (this);
 		}
 
-		cameraController.SetPosition (transform.position);
-		
 		// 変数初期化
 		rightFacing = true; // 最初は右向き
 
@@ -64,8 +61,6 @@ public class ActorController : MonoBehaviour
 		MoveUpdate ();
 		// ジャンプ入力処理
 		JumpUpdate ();
-
-		cameraController.SetPosition (transform.position);
 	}
 	
 	/// <summary>
@@ -133,11 +128,13 @@ public class ActorController : MonoBehaviour
 	{
 		// 移動速度ベクトルを現在値から取得
 		Vector2 velocity = rigidbody2D.linearVelocity;
+		Debug.Log($"xSpeed={xSpeed}, before={velocity}");
 		// X方向の速度を入力から決定
 		velocity.x = xSpeed;
 
 		// 計算した移動速度ベクトルをRigidbody2Dに反映
 		rigidbody2D.linearVelocity = velocity;
+		Debug.Log($"after={rigidbody2D.linearVelocity}");
 	}
 
 	/// <summary>

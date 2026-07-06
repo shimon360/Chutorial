@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 3d4346aacef1d4b77b74c0a8e1d54ef9
+guid: 4a63817d4d71e46d98456dec79ce300e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4454631428275665778
-    second: mouse_0
+      213: 1969046558531472801
+    second: crumbs_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: mouse_0
+      name: crumbs_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 331
-        width: 1178
-        height: 702
+        x: 153
+        y: 196
+        width: 936
+        height: 949
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 27b79afaea702dd30800000000000000
-      internalID: 4454631428275665778
+      spriteID: 1ad497b9965735b10800000000000000
+      internalID: 1969046558531472801
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      mouse_0: 4454631428275665778
+      crumbs_0: 1969046558531472801
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
