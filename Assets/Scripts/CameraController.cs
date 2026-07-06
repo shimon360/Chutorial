@@ -35,6 +35,8 @@ public class CameraController : MonoBehaviour
 
 	private float fixedY;
 
+	private bool isFocusing = false;     // フォーカス中フラグ
+
 	[Header("カメラ範囲")]
 	[SerializeField]
 	private Transform leftLimit;
@@ -43,6 +45,12 @@ public class CameraController : MonoBehaviour
 
 	[SerializeField]
 	private float cameraOffset = 2.5f; // Playerを画面の左側に表示する量
+
+	[Header("フォーカス設定")]
+	[SerializeField]
+	private float focusTime = 1.0f;
+	[SerializeField]
+	private float focusMoveDuration = 0.5f;
 	
 	[HideInInspector] public bool isScrolling = false; // エリア間スクロール中かどうか
 	private Vector2 scrollTargetPos; // スクロール時の目標座標
@@ -79,7 +87,10 @@ public class CameraController : MonoBehaviour
 	// FixedUpdate
 	private void FixedUpdate ()
 	{
-		Debug.Log("FixedUpdate動いている");
+		if(isFocusing)
+		{
+			return;
+		}
 
 		// カメラの目標座標を決定する
 		Vector3 pos = transform.localPosition;
@@ -146,5 +157,77 @@ public class CameraController : MonoBehaviour
     	{
         	obj.position += new Vector3(objectLoopWidth * 2f, 0, 0);
     	}
+	}
+
+	public void FocusOn(Transform target)
+	{
+		StartCoroutine(FocusCoroutine(target));
+	}
+
+	private IEnumerator FocusCoroutine(Transform target)
+	{
+		isFocusing = true;
+		if(actorController != null)
+		{
+			actorController.SetControlEnabled(false);
+		}
+		
+		// 開始位置
+		Vector3 startPosition = transform.localPosition;
+
+		// 猫を見る位置
+		Vector3 targetPosition = new Vector3(
+			target.position.x,
+			target.position.y,
+			transform.localPosition.z
+		);
+
+
+		// プレイヤー位置から猫位置へ移動
+		float timer = 0f;
+
+		while(timer < focusMoveDuration)
+		{
+			timer += Time.deltaTime;
+
+			transform.localPosition = Vector3.Lerp(
+				startPosition,
+				targetPosition,
+				timer / focusMoveDuration
+			);
+
+			yield return null;
+		}
+
+
+		// 猫を見る時間
+		yield return new WaitForSeconds(focusTime);
+
+
+		// 元の位置へ戻る
+		timer = 0f;
+
+		while(timer < focusMoveDuration)
+		{
+			timer += Time.deltaTime;
+
+			transform.localPosition = Vector3.Lerp(
+				targetPosition,
+				startPosition,
+				timer / focusMoveDuration
+			);
+
+			yield return null;
+		}
+
+
+		transform.localPosition = startPosition;
+
+		if(actorController != null)
+		{
+			actorController.SetControlEnabled(true);
+		}
+
+		isFocusing = false;
 	}
 }

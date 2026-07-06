@@ -28,6 +28,8 @@ public class ActorController : MonoBehaviour
 	[HideInInspector] public float xSpeed; // X方向移動速度
 	[HideInInspector] public bool rightFacing; // 向いている方向(true.右向き false:左向き)
 
+	private bool canControl = true;
+
 	// Start（オブジェクト有効化時に1度実行）
 	void Start()
 	{
@@ -68,8 +70,13 @@ public class ActorController : MonoBehaviour
 	/// </summary>
 	private void MoveUpdate ()
 	{
+		if(!canControl)
+		{
+			xSpeed = 0f;
+			return;
+		}
 		// X方向移動入力
-		if (Keyboard.current.rightArrowKey.isPressed)
+		if (Keyboard.current.dKey.isPressed)
 		{// 右方向の移動入力
 			// X方向移動速度をプラスに設定
 			xSpeed = 6.0f;
@@ -80,7 +87,7 @@ public class ActorController : MonoBehaviour
 			// スプライトを通常の向きで表示
 			spriteRenderer.flipX = false;
 		}
-		else if (Keyboard.current.leftArrowKey.isPressed)
+		else if (Keyboard.current.aKey.isPressed)
 		{// 左方向の移動入力
 			// X方向移動速度をマイナスに設定
 			xSpeed = -6.0f;
@@ -103,8 +110,12 @@ public class ActorController : MonoBehaviour
 	/// </summary>
 	private void JumpUpdate ()
 	{
+		if(!canControl)
+		{
+			return;
+		}
 		// 接地している時に上キーが「押された瞬間」のみジャンプ
-		if (groundSensor != null && groundSensor.isGrounded && Keyboard.current.upArrowKey.wasPressedThisFrame)
+		if (groundSensor != null && groundSensor.isGrounded && Keyboard.current.spaceKey.wasPressedThisFrame)
 		{// ジャンプ開始
 			// ジャンプ力を計算
 			float jumpPower = 10.0f;
@@ -114,7 +125,7 @@ public class ActorController : MonoBehaviour
 		}
 
 		// 上キーを「離した瞬間」にまだ上昇中なら、上方向の速度を減らしてジャンプの高さを調整する
-		if (Keyboard.current.upArrowKey.wasReleasedThisFrame)
+		if (Keyboard.current.spaceKey.wasReleasedThisFrame)
 		{
 			if (rigidbody2D.linearVelocity.y > 0.0f)
 			{
@@ -128,13 +139,11 @@ public class ActorController : MonoBehaviour
 	{
 		// 移動速度ベクトルを現在値から取得
 		Vector2 velocity = rigidbody2D.linearVelocity;
-		Debug.Log($"xSpeed={xSpeed}, before={velocity}");
 		// X方向の速度を入力から決定
 		velocity.x = xSpeed;
 
 		// 計算した移動速度ベクトルをRigidbody2Dに反映
 		rigidbody2D.linearVelocity = velocity;
-		Debug.Log($"after={rigidbody2D.linearVelocity}");
 	}
 
 	/// <summary>
@@ -202,5 +211,10 @@ public class ActorController : MonoBehaviour
 	private void UpdateHiddenStatus()
 	{
 		isHiddenFromRedLight = (shadowOverlapCount > 0);
+	}
+
+	public void SetControlEnabled(bool enabled)
+	{
+    	canControl = enabled;
 	}
 }
