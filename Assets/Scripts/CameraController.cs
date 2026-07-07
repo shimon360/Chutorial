@@ -159,12 +159,12 @@ public class CameraController : MonoBehaviour
     	}
 	}
 
-	public void FocusOn(Transform target)
+	public void FocusOn(Transform target, System.Action onFinished = null)
 	{
-		StartCoroutine(FocusCoroutine(target));
+		StartCoroutine(FocusCoroutine(target, onFinished));
 	}
 
-	private IEnumerator FocusCoroutine(Transform target)
+	private IEnumerator FocusCoroutine(Transform target, System.Action onFinished)
 	{
 		isFocusing = true;
 		if(actorController != null)
@@ -223,11 +223,10 @@ public class CameraController : MonoBehaviour
 
 		transform.localPosition = startPosition;
 
-		if(actorController != null)
-		{
-			actorController.SetControlEnabled(true);
-		}
-
 		isFocusing = false;
+
+		actorController.SetControlEnabled(true);
+
+		onFinished?.Invoke();
 	}
 }
