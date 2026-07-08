@@ -35,10 +35,12 @@ public class CheeseController : MonoBehaviour
     {
         isCollected = true;
 
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.CollectCheese();
+        }
+
         // 皿だけに変更
         spriteRenderer.sprite = dishSprite;
-
-        // 必要ならここでゲーム管理へ通知
-        // GameManager.Instance.GetCheese();
     }
 }

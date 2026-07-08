@@ -25,4 +25,9 @@ public class GameManager : MonoBehaviour
         HasCheese = false;
         NextSpawnPointID = "";
     }
+
+    public void CollectCheese()
+    {
+        HasCheese = true;
+    }
 }
