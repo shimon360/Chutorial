@@ -28,6 +28,9 @@ public class ActorController : MonoBehaviour
 	[HideInInspector] public float xSpeed; // X方向移動速度
 	[HideInInspector] public bool rightFacing; // 向いている方向(true.右向き false:左向き)
 
+	// 移動速度倍率
+	private float speedMultiplier = 1f;
+
 	private bool canControl = true;
 
 	// Start（オブジェクト有効化時に1度実行）
@@ -79,7 +82,7 @@ public class ActorController : MonoBehaviour
 		if (Keyboard.current.dKey.isPressed)
 		{// 右方向の移動入力
 			// X方向移動速度をプラスに設定
-			xSpeed = 6.0f;
+			xSpeed = 6.0f * speedMultiplier;
 
 			// 右向きフラグon
 			rightFacing = true;
@@ -90,7 +93,7 @@ public class ActorController : MonoBehaviour
 		else if (Keyboard.current.aKey.isPressed)
 		{// 左方向の移動入力
 			// X方向移動速度をマイナスに設定
-			xSpeed = -6.0f;
+			xSpeed = -6.0f * speedMultiplier;
 
 			// 右向きフラグoff
 			rightFacing = false;
@@ -216,5 +219,14 @@ public class ActorController : MonoBehaviour
 	public void SetControlEnabled(bool enabled)
 	{
     	canControl = enabled;
+	}
+
+	/// <summary>
+	/// 移動速度倍率を変更する
+	/// </summary>
+	/// <param name="multiplier">速度倍率(1=通常、0.5=半分)</param>
+	public void UpdateSpeedMultiplier(float multiplier)
+	{
+		speedMultiplier = multiplier;
 	}
 }
