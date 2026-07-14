@@ -24,6 +24,6 @@ public class TitleManager : MonoBehaviour
             GameManager.Instance.ResetGame();
         }
 
-        SceneManager.LoadScene("Shelter");
+        SceneFader.Instance.FadeToScene("Shelter");
     }
 }
